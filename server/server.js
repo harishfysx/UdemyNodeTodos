@@ -5,34 +5,54 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 //local user defined imports
-var {mongoose} = require('./db/mongoose');
-var {Todo} = require('./models/todo');
-var {User} = require('./models/user');
+var {
+    mongoose
+} = require('./db/mongoose');
+var {
+    Todo
+} = require('./models/todo');
+var {
+    User
+} = require('./models/user');
 
 var app = express();
 
 //Middleware
 app.use(bodyParser.json());
 
-app.get('/', function (req, res) {
-  res.send('hello world')
+app.get('/', function(req, res) {
+    res.send('hello world')
 });
 
-app.post('/todos',(req,res) =>{
-//console.log(req.body);
-var todo = new Todo({
-  text : req.body.text
-});
-todo.save().then((doc) =>{
-  res.send(doc)
-}, (e) =>{
-  res.status(400).send(e)
-});
+//GET /todos handle
+
+app.get('/todos',(req, res) =>{
+  Todo.find().then((todos) =>{
+    res.send({todos});
+  },(err) =>{
+    res.status(400).send(err);
+  })
 
 });
 
-app.listen(port, function () {
+//POST /todos handle
+app.post('/todos', (req, res) => {
+    var todo = new Todo({
+        text: req.body.text
+    });
+    todo.save().then((doc) => {
+        res.send(doc)
+    }, (e) => {
+        res.status(400).send(e)
+    });
+
+});
+
+//start server
+app.listen(port, function() {
     console.log(`Example app listening on port ${port}!`)
 });
 
-module.exports = {app};
+module.exports = {
+    app
+};
