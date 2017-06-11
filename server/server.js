@@ -14,6 +14,7 @@ var {
 var {
     User
 } = require('./models/user');
+const {ObjectId} = require('mongodb');
 
 var app = express();
 
@@ -25,12 +26,28 @@ app.get('/', function(req, res) {
 });
 
 //GET /todos handle
-
 app.get('/todos',(req, res) =>{
   Todo.find().then((todos) =>{
     res.send({todos});
   },(err) =>{
     res.status(400).send(err);
+  })
+
+});
+//Get /todos/id handle
+app.get('/todos/:id',(req,res) =>{
+  var id = req.params.id;
+  if(!ObjectId.isValid(id)){
+    return res.status(404).send();
+  }
+
+  Todo.findOne({_id:id}).then((result) =>{
+    if(!result){
+      return  res.status(404).send()
+    }
+    res.send(result)
+  }).catch((e) =>{
+    res.status(404).send();
   })
 
 });
