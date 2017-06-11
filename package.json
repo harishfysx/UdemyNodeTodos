@@ -8,13 +8,14 @@
     "test": "mocha **/**/*.test.js",
     "test-watch": "nodemon --exec \"yarn test\""
   },
-  "engines":{
+  "engines": {
     "node": "v6.11.0"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
-    "mongodb": "^2.2.28"
+    "mongodb": "^2.2.28",
+    "mongoose": "^4.10.5"
   },
   "devDependencies": {
     "expect": "^1.20.2",
