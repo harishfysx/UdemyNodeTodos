@@ -41,11 +41,11 @@ app.get('/todos/:id',(req,res) =>{
     return res.status(404).send();
   }
 
-  Todo.findOne({_id:id}).then((result) =>{
-    if(!result){
+  Todo.findOne({_id:id}).then((todo) =>{
+    if(!todo){
       return  res.status(404).send()
     }
-    res.send(result)
+    res.send({todo})
   }).catch((e) =>{
     res.status(404).send();
   })
