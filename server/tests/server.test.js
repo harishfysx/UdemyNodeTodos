@@ -95,7 +95,7 @@ it('should not create to do with invalid body data', (done) => {
 
 //
 //GET describe
-describe('Get /todos test cases', () => {
+describe('GET /todos test cases', () => {
 
     //test1
     it('should return all todos', (done) => {
@@ -141,6 +141,36 @@ describe('Get /todos test cases', () => {
             .end(done);
     })
 
-
-
 });// Get describe end
+
+//Start DELETE TEST cases
+
+describe('DELETE /todos/:id', () =>{
+
+  //test1
+  it('shoudl remove a todo',(done) =>{
+    var hexId = todosTestData[0]._id.toHexString();
+    request(app)
+      .delete(`/todos/${hexId}`)
+      .expect(200)
+      .expect((res) =>{
+        expect(res.body.todo._id).toBe(hexId);
+      })
+      .end((err,res) =>{
+        if(err){
+          return done(err);
+        }
+        //query db to make sure its removed
+        Todo.findById(hexId).then((todo) =>{
+          expect(todo).toNotExist();
+          done();
+        }).catch((e) =>{
+          done(e);
+        })
+
+      })
+  });
+
+  //test2
+
+});//END DELETE TEST cases
