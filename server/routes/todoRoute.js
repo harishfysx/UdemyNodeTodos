@@ -1,10 +1,9 @@
 
-//environment set up
-require('./config/config');
-//user define environment variables
 
 // yarn downloaded modules
 const express = require('express');
+const router = express.Router();
+const todoRoute = router.route('/')
 const bodyParser = require('body-parser');
 const {ObjectId} = require('mongodb');
 const _ = require('lodash');
@@ -12,34 +11,27 @@ const _ = require('lodash');
 //local user defined imports
 var {
     mongoose
-} = require('./db/mongoose');
+} = require('./../db/mongoose');
 var {
     Todo
-} = require('./models/todo');
+} = require('./../models/todo');
 var {
     User
-} = require('./models/user');
+} = require('./../models/user');
 
 
 
-
-
-
-var app = express();
+//var app = express();
 
 //Middleware
-app.use(bodyParser.json());
-
+//app.use(bodyParser.json());
 
 //Start Request handling
 
-//Home page handling
-app.get('/', function(req, res) {
-    res.send('hello world')
-});
+
 
 //GET /todos handle
-app.get('/todos',(req, res) =>{
+todoRoute.get('/todos',(req, res) =>{
   Todo.find().then((todos) =>{
     res.send({todos});
   },(err) =>{
@@ -48,7 +40,7 @@ app.get('/todos',(req, res) =>{
 
 });
 //Get /todos/id handle
-app.get('/todos/:id',(req,res) =>{
+todoRoute.get('/todos/:id',(req,res) =>{
   var id = req.params.id;
   if(!ObjectId.isValid(id)){
     return res.status(404).send();
@@ -66,7 +58,7 @@ app.get('/todos/:id',(req,res) =>{
 });
 
 //POST /todos handle
-app.post('/todos', (req, res) => {
+todoRoute.post('/todos', (req, res) => {
     var todo = new Todo({
         text: req.body.text
     });
@@ -79,7 +71,7 @@ app.post('/todos', (req, res) => {
 });
 
 //DELETE /todo/:id
-app.delete('/todos/:id',(req,res) =>{
+todoRoute.delete('/todos/:id',(req,res) =>{
   var id = req.params.id;
   if(!ObjectId.isValid(id)){
     return res.status(404).send();
@@ -97,7 +89,7 @@ app.delete('/todos/:id',(req,res) =>{
 });
 
 //PATCH todo/:id
-app.patch('/todos/:id',(req,res) =>{
+todoRoute.patch('/todos/:id',(req,res) =>{
   var id = req.params.id;
   var body = _.pick(req.body,['text','completed']);
   if(!ObjectId.isValid(id)){
@@ -122,27 +114,6 @@ app.patch('/todos/:id',(req,res) =>{
      res.status(404).send();
   })
 });
-//////////////////  Below are handlders for USERS
-// POST /Users
-app.post('/users',(req, res) =>{
-  var body = _.pick(req.body,['email','password']);
-  var user = new User(body);
-  user.save().then(() => {
-      return user.generateAuthToken();
-  }).then((token) =>{
-    res.header('x-auth',token).send(user);
-  }).catch((e) => {
-      res.status(400).send(e)
-  });
-})
 
 
-
-//start server
-app.listen(process.env.PORT, function() {
-    console.log(`Example app listening on port ${process.env.PORT}!`)
-});
-
-module.exports = {
-    app
-};
+module.exports = todoRoute;
