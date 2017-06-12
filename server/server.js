@@ -1,5 +1,8 @@
+
+//environment set up
+require('./config/config');
 //user define environment variables
-var port = process.env.PORT || 3000;
+
 // yarn downloaded modules
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -16,6 +19,7 @@ var {
 var {
     User
 } = require('./models/user');
+
 
 
 var app = express();
@@ -117,8 +121,8 @@ app.patch('/todos/:id',(req,res) =>{
 
 });
 //start server
-app.listen(port, function() {
-    console.log(`Example app listening on port ${port}!`)
+app.listen(process.env.PORT, function() {
+    console.log(`Example app listening on port ${process.env.PORT}!`)
 });
 
 module.exports = {
