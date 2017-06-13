@@ -195,3 +195,91 @@ describe('PATCH /todos/:id', () =>{
   })
 
 });//End PATCH Test cases
+
+//Start USERS end points toHexString
+describe('GET /users/me testing', () =>{
+  //test1
+  it('Return user if authenticated',(done) =>{
+    request(app)
+      .get('/users/me')
+      .set('x-auth',usersTestData[0].tokens[0].token)
+      .expect(200)
+      .expect((res) =>{
+        expect(res.body._id).toBe(usersTestData[0]._id.toHexString());
+        expect(res.body.email).toBe(usersTestData[0].email);
+      })
+      .end(done);
+
+  });
+
+  //test2
+  it('Return 401 if not authenticated',(done) =>{
+    request(app)
+      .get('/users/me')
+      .expect(401)
+      .expect((res) =>{
+        expect(res.body).toEqual({});
+      })
+      .end(done);
+  });
+
+});//End describe('GET /users/me testing)
+
+// start describe post /users
+describe('POST /users',() =>{
+
+//test1
+  it('should create user ',(done) =>{
+    var email ='user3@example.com';
+    var password = 'test123C'
+    request(app)
+      .post('/users')
+      .send({email,password})
+      .expect(200)
+      .expect((res) =>{
+        expect(res.headers['x-auth']).toExist();
+        expect(res.body._id).toExist();
+        expect(res.body.email).toBe(email);
+      })
+      .end((err) => {
+        if(err){
+          return done(err);
+        }
+        User.findOne({email}).then((user) =>{
+          expect(user).toExist();
+          expect(user.password).toNotBe(password);
+          done();
+        }).catch((e) =>{
+          done(e);
+        })
+      });
+
+  })
+
+  //test2
+  it('should not create user for invalid user', (done) =>{
+    var email = 'hari';
+    var password = 'abc';
+    request(app)
+      .post('/users')
+      .send({email,password})
+      .expect(400)
+      .end(done);
+  })
+  //test3
+ it('should not create user with duplicate email',(done) =>{
+   var email ='user1@example.com';
+   var password = 'test123C';
+   request(app)
+    .post('/users')
+    .send({email,password})
+    .expect(400)
+    .end(done);
+ })
+
+
+})// end describe post /users
+
+
+
+//End USERS end points
