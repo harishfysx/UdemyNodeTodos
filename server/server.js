@@ -150,6 +150,14 @@ app.post('/users/login', (req, res) => {
     res.status(400).send();
   });
 });
+//handle /users/me/token DELETE
+app.delete('/users/me/token',authenticate,(req,res) =>{
+  req.user.removeToken(req.token).then(() =>{
+    res.status(200).send();
+  }).catch((e) =>{
+    res.status(400).send();
+  })
+})
 //handle if user has jwt
 app.get('/users/me',authenticate,(req,res) =>{
     res.send(req.user);
