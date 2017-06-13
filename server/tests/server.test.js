@@ -1,42 +1,19 @@
 // yarn downloaded modules
 const expect = require('expect');
 const request = require('supertest');
-const {
-    ObjectId
-} = require('mongodb');
+const {ObjectId} = require('mongodb');
 
 
 
 //local user defined imports
-const {
-    app
-} = require('./../server');
-var {
-    Todo
-} = require('./../models/todo');
-var {
-    User
-} = require('./../models/user');
+const {app} = require('./../server');
+const {Todo} = require('./../models/todo');
+const {User} = require('./../models/user');
+const {todosTestData,populateTodoData,usersTestData,populateUsersData} = require('./seed/seed');
 
-
-var todosTestData = [{
-    _id: new ObjectId(),
-    text: 'First todo'
-}, {
-    _id: new ObjectId(),
-    text: 'Second todo'
-}];
 //Run before each test cast
-beforeEach((done) => {
-    //Remove the data
-    Todo.remove({}).then(() => {
-        //Add some test data
-        return Todo.insertMany(todosTestData)
-    }).then(() => {
-        done();
-    })
-
-});
+beforeEach(populateTodoData);
+beforeEach(populateUsersData);
 
 // POST /todos tests
 describe('POST /todos', () => {
