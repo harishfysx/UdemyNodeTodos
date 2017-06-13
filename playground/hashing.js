@@ -29,10 +29,21 @@ if(resultHash == token.hash){
 */
 //Below is JWT playgorund
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
+var pass = '123abc'
+
+bcrypt.genSalt(10,(err,salt) =>{
+  bcrypt.hash(pass,salt, (err,hash) =>{
+    console.log(hash);
+  })
+
+})
+/*
 var data = {
   id:10
 }
 
 var token = jwt.sign(data,'secret');
 console.log(token);
+*/
