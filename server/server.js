@@ -1,6 +1,7 @@
 
 //environment set up
 require('./config/config');
+
 //user define environment variables
 
 // yarn downloaded modules
@@ -19,6 +20,7 @@ var {
 var {
     User
 } = require('./models/user');
+var {authenticate} =require('./middleware/authenticate');
 
 
 
@@ -135,8 +137,13 @@ app.post('/users',(req, res) =>{
       res.status(400).send(e)
   });
 })
+//authentciate function
 
+//test private route
 
+app.get('/users/me',authenticate,(req,res) =>{
+    res.send(req.user);
+});
 
 //start server
 app.listen(process.env.PORT, function() {
