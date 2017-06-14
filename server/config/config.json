@@ -1,0 +1,12 @@
+{
+  "test" :{
+    "PORT" : 4000,
+    "MONGODB_URI":"mongodb://127.0.0.1:27017/TodoAppTest",
+    "JWT_SECRET" : "yteyriehhyiy872973792732"
+  },
+  "development" :{
+    "PORT" : 3000,
+    "MONGODB_URI":"mongodb://127.0.0.1:27017/TodoApp",
+    "JWT_SECRET" : "97934973hkhkhdfd872973792732"
+  }
+}
