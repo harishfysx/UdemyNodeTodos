@@ -10,18 +10,19 @@ const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 const {User} = require('./../models/user');
 const {todosTestData,populateTodoData,usersTestData,populateUsersData} = require('./seed/seed');
+const baseUrl = '/api/todo'
 
 //Run before each test cast
 beforeEach(populateTodoData);
 beforeEach(populateUsersData);
 
 
-describe('POST /api/todo/todos', () => {
+describe('POST ${baseUrl}/todos', () => {
   it('should create a new todo', (done) => {
     var text = todosTestData[0].text;
 
     request(app)
-      .post('/api/todo/todos')
+      .post(`${baseUrl}/todos`)
       .set('x-auth', usersTestData[0].tokens[0].token)
       .send({text})
       .expect(200)
@@ -43,7 +44,7 @@ describe('POST /api/todo/todos', () => {
 
   it('should not create todo with invalid body data', (done) => {
     request(app)
-      .post('/api/todo/todos')
+      .post(`${baseUrl}/todos`)
       .set('x-auth', usersTestData[0].tokens[0].token)
       .send({})
       .expect(400)
@@ -60,10 +61,10 @@ describe('POST /api/todo/todos', () => {
   });
 });
 
-describe('GET /api/todo/todos', () => {
+describe('GET ${baseUrl}/todos', () => {
   it('should get all todos for user1', (done) => {
     request(app)
-      .get('/api/todo/todos')
+      .get(`${baseUrl}/todos`)
       .set('x-auth', usersTestData[0].tokens[0].token)
       .expect(200)
       .expect((res) => {
@@ -73,10 +74,10 @@ describe('GET /api/todo/todos', () => {
   });
 });
 
-describe('GET /api/todo/todos/:id', () => {
+describe('GET ${baseUrl}/todos/:id', () => {
   it('should return todo doc', (done) => {
     request(app)
-      .get(`/api/todo/todos/${todosTestData[0]._id.toHexString()}`)
+      .get(`${baseUrl}/todos/${todosTestData[0]._id.toHexString()}`)
       .set('x-auth', usersTestData[0].tokens[0].token)
       .expect(200)
       .expect((res) => {
@@ -87,7 +88,7 @@ describe('GET /api/todo/todos/:id', () => {
 
   it('should not return todo doc created by other user', (done) => {
     request(app)
-      .get(`/api/todo/todos/${todosTestData[1]._id.toHexString()}`)
+      .get(`${baseUrl}/todos/${todosTestData[1]._id.toHexString()}`)
       .set('x-auth', usersTestData[0].tokens[0].token)
       .expect(404)
       .end(done);
@@ -97,7 +98,7 @@ describe('GET /api/todo/todos/:id', () => {
     var hexId = new ObjectID().toHexString();
 
     request(app)
-      .get(`/api/todo/todos/${hexId}`)
+      .get(`${baseUrl}/todos/${hexId}`)
       .set('x-auth', usersTestData[0].tokens[0].token)
       .expect(404)
       .end(done);
@@ -105,19 +106,19 @@ describe('GET /api/todo/todos/:id', () => {
 
   it('should return 404 for non-object ids', (done) => {
     request(app)
-      .get('/api/todo/todos/123abc')
+      .get(`${baseUrl}/todos/123abc`)
       .set('x-auth', usersTestData[0].tokens[0].token)
       .expect(404)
       .end(done);
   });
 });
 
-describe('DELETE /api/todo/todos/:id', () => {
+describe('DELETE ${baseUrl}/todos/:id', () => {
   it('should remove a todo', (done) => {
     var hexId = todosTestData[1]._id.toHexString();
 
     request(app)
-      .delete(`/api/todo/todos/${hexId}`)
+      .delete(`${baseUrl}/todos/${hexId}`)
       .set('x-auth', usersTestData[1].tokens[0].token)
       .expect(200)
       .expect((res) => {
@@ -139,7 +140,7 @@ describe('DELETE /api/todo/todos/:id', () => {
     var hexId = todosTestData[0]._id.toHexString();
 
     request(app)
-      .delete(`/api/todo/todos/${hexId}`)
+      .delete(`${baseUrl}/todos/${hexId}`)
       .set('x-auth', usersTestData[1].tokens[0].token)
       .expect(404)
       .end((err, res) => {
@@ -158,7 +159,7 @@ describe('DELETE /api/todo/todos/:id', () => {
     var hexId = new ObjectID().toHexString();
 
     request(app)
-      .delete(`/api/todo/todos/${hexId}`)
+      .delete(`${baseUrl}/todos/${hexId}`)
       .set('x-auth', usersTestData[1].tokens[0].token)
       .expect(404)
       .end(done);
@@ -166,20 +167,20 @@ describe('DELETE /api/todo/todos/:id', () => {
 
   it('should return 404 if object id is invalid', (done) => {
     request(app)
-      .delete('/api/todo/todos/123abc')
+      .delete(`${baseUrl}/todos/123abc`)
       .set('x-auth', usersTestData[1].tokens[0].token)
       .expect(404)
       .end(done);
   });
 });
 
-describe('PATCH /api/todo/todos/:id', () => {
+describe('PATCH ${baseUrl}/todos/:id', () => {
   it('should update the todo', (done) => {
     var hexId = todosTestData[0]._id.toHexString();
     var text = 'This should be the new text';
 
     request(app)
-      .patch(`/api/todo/todos/${hexId}`)
+      .patch(`${baseUrl}/todos/${hexId}`)
       .set('x-auth', usersTestData[0].tokens[0].token)
       .send({
         completed: true,
@@ -199,7 +200,7 @@ describe('PATCH /api/todo/todos/:id', () => {
     var text = 'This should be the new text';
 
     request(app)
-      .patch(`/api/todo/todos/${hexId}`)
+      .patch(`${baseUrl}/todos/${hexId}`)
       .set('x-auth', usersTestData[1].tokens[0].token)
       .send({
         completed: true,
@@ -214,7 +215,7 @@ describe('PATCH /api/todo/todos/:id', () => {
     var text = 'This should be the new text!!';
 
     request(app)
-      .patch(`/api/todo/todos/${hexId}`)
+      .patch(`${baseUrl}/todos/${hexId}`)
       .set('x-auth', usersTestData[1].tokens[0].token)
       .send({
         completed: false,
