@@ -21,7 +21,16 @@
     "lodash": "^4.17.4",
     "mongodb": "^2.2.28",
     "mongoose": "^4.10.5",
-    "validator": "^7.0.0"
+    "validator": "^7.0.0",
+    "connect-flash": "*",
+    "cookie-parser": "^1.4.1",
+    "express-messages": "*",
+    "express-session": "*",
+    "express-validator": "*",
+    "hbs": "^4.0.1",
+    "passport": "*",
+    "passport-http": "*",
+    "passport-local": "*"
   },
   "devDependencies": {
     "expect": "^1.20.2",
